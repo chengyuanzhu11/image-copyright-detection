@@ -24,7 +24,7 @@
 * **特征提取与标准化**：选用预训练的 50 层深度卷积神经网络 ResNet50 作为核心特征提取器，输出 2048 维特征向量 。并在提取流程中强制引入 L2 范数归一化处理，消除因光照或尺度差异带来的幅值误差 。
 
 
-* **相似度度量**：基于标准化特征向量，采用余弦相似度算法量化图像间的视觉匹配度 。核心计算公式为：$S_{im}cos(A,B)=\frac{A\cdot B}{||A||\cdot||B||}$ 。
+* **相似度度量**：基于标准化特征向量，采用余弦相似度算法量化图像间的视觉匹配度 。核心计算公式为：<mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mrow><mml:msub><mml:mi>S</mml:mi><mml:mrow><mml:mi>i</mml:mi><mml:mi>m</mml:mi></mml:mrow></mml:msub><mml:mi>c</mml:mi><mml:mi>o</mml:mi><mml:mi>s</mml:mi><mml:mo form="prefix" stretchy="false">(</mml:mo><mml:mi>A</mml:mi><mml:mo separator="true">,</mml:mo><mml:mi>B</mml:mi><mml:mo form="postfix" stretchy="false">)</mml:mo><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mi>A</mml:mi><mml:mo>⋅</mml:mo><mml:mi>B</mml:mi></mml:mrow><mml:mrow><mml:mi>|</mml:mi><mml:mi>|</mml:mi><mml:mi>A</mml:mi><mml:mi>|</mml:mi><mml:mi>|</mml:mi><mml:mo>⋅</mml:mo><mml:mi>|</mml:mi><mml:mi>|</mml:mi><mml:mi>B</mml:mi><mml:mi>|</mml:mi><mml:mi>|</mml:mi></mml:mrow></mml:mfrac></mml:mrow></mml:math> 。
 
 
 * **品牌最大匹配策略 (Brand Maximum Match)**：为解决同一品牌下存在多套 Logo 变体（因时期、颜色、形状不同）的识别难题，构建了“品牌-多 Logo”映射数据结构 。系统计算输入图像与某品牌所有参考模板的相似度后，取最大值作为该品牌的最终得分，兼顾了识别的全面性与准确性 。
