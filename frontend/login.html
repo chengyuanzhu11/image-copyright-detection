@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 图像版权检测系统</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+        .login-container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+        .card-header {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 20px;
+            text-align: center;
+        }
+        .form-control {
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #3a7bd5;
+            box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
+        }
+        .form-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            border: none;
+            border-radius: 20px;
+            padding: 12px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .login-icon {
+            font-size: 5rem;
+            color: #3a7bd5;
+            margin-bottom: 20px;
+        }
+        .alert {
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: #3a7bd5;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .register-link a:hover {
+            color: #00d2ff;
+        }
+        .input-group-text {
+            background: transparent;
+            border-left: none;
+            cursor: pointer;
+        }
+        .form-floating > .form-control {
+            padding-top: 1.625rem;
+            padding-bottom: 0.625rem;
+            height: calc(3.5rem + 2px);
+        }
+        .form-floating > label {
+            padding: 1rem 0.75rem;
+        }
+        /* 抖动动画效果 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="text-center">
+                    <i class="fas fa-user-circle login-icon"></i>
+                    <h2 class="mb-4">用户登录</h2>
+                </div>
+                
+                <div id="alertMessage" class="alert alert-danger" style="display: none;" role="alert"></div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-sign-in-alt"></i> 登录系统
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="fas fa-user"></i> 用户名
+                                </label>
+                                <input type="text" class="form-control" id="username" placeholder="请输入用户名" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock"></i> 密码
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" placeholder="请输入密码" required>
+                                    <span class="input-group-text" id="togglePassword">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">记住我</label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> 登录
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="register-link">
+                    还没有账号？<a href="#" id="showRegister">立即注册</a>
+                    <br>
+                    <button id="resetStorage" class="btn btn-sm btn-outline-danger mt-3">重置存储 (解决登录卡顿问题)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const alertMessage = document.getElementById('alertMessage');
+            const showRegister = document.getElementById('showRegister');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const resetStorage = document.getElementById('resetStorage');
+            const usernameInput = document.getElementById('username');
+
+            // 重置localStorage
+            resetStorage.addEventListener('click', function() {
+                if (confirm('确定要重置所有本地存储数据吗？这将清除所有用户信息和登录状态。')) {
+                    localStorage.clear();
+                    showAlert('存储已重置，页面将刷新', 'success');
+                    setTimeout(function() {
+                        window.parent.location.reload();
+                    }, 2000);
+                }
+            });
+
+            // 切换密码可见性
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // 显示注册页面
+            showRegister.addEventListener('click', function(e) {
+                e.preventDefault();
+                // 通知父窗口显示注册页面
+                window.parent.postMessage({ type: 'show-register' }, '*');
+            });
+
+            // 显示提示消息
+            function showAlert(message, type = 'danger') {
+                alertMessage.textContent = message;
+                alertMessage.className = `alert alert-${type}`;
+                alertMessage.style.display = 'block';
+                
+                // 确保消息可见
+                alertMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // 5秒后自动隐藏
+                if (type === 'success') {
+                    setTimeout(() => {
+                        alertMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    // 为错误消息添加抖动效果
+                    alertMessage.classList.add('shake');
+                    setTimeout(() => {
+                        alertMessage.classList.remove('shake');
+                    }, 500);
+                }
+            }
+
+            // 检查是否有记住的用户名或刚注册的用户名
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            const registerUsername = localStorage.getItem('registerUsername');
+            
+            if (registerUsername) {
+                // 优先使用刚注册的用户名
+                usernameInput.value = registerUsername;
+                // 使用后立即删除
+                localStorage.removeItem('registerUsername');
+                // 给新注册用户一个欢迎提示
+                showAlert('您已成功注册，请输入密码登录', 'success');
+            } else if (rememberedUser) {
+                // 其次使用记住的用户名
+                usernameInput.value = rememberedUser;
+                document.getElementById('rememberMe').checked = true;
+            }
+
+            // 处理登录表单提交
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+
+                // 简单的客户端验证
+                if (!username) {
+                    showAlert('请输入用户名');
+                    usernameInput.focus();
+                    return;
+                }
+                
+                if (!password) {
+                    showAlert('请输入密码');
+                    passwordInput.focus();
+                    return;
+                }
+
+                // A显示加载状态
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 登录中...';
+                
+                // 登录处理逻辑
+                setTimeout(function() {
+                    try {
+                        console.log('开始登录处理');
+                        
+                        // 获取用户数据
+                        let users = [];
+                        try {
+                            const usersData = localStorage.getItem('users');
+                            users = usersData ? JSON.parse(usersData) : [];
+                            console.log('已获取用户数据，用户数量:', users.length);
+                        } catch (error) {
+                            console.error('解析用户数据出错:', error);
+                            users = [];
+                        }
+                        
+                        // 查找匹配的用户
+                        console.log('查找用户:', username);
+                        const user = users.find(u => u.username === username && u.password === password);
+                        
+                        // 重置按钮状态（无论成功还是失败）
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                        
+                        if (user) {
+                            // 登录成功，保存用户信息
+                            console.log('用户验证成功:', user.username);
+                            const token = 'login-token-' + Date.now();
+                            
+                            // 记住用户名
+                            if (rememberMe) {
+                                localStorage.setItem('rememberedUser', username);
+                                console.log('已记住用户名');
+                            } else {
+                                localStorage.removeItem('rememberedUser');
+                            }
+                            
+                            // 存储用户信息
+                            localStorage.setItem('currentUser', JSON.stringify(user));
+                            localStorage.setItem('userToken', token);
+                            localStorage.setItem('lastActivity', Date.now());
+                            
+                            console.log('用户数据已保存到本地存储');
+                            
+                            // 显示成功信息
+                            showAlert('登录成功，欢迎回来！', 'success');
+                            
+                            // 通知父窗口登录成功
+                            window.parent.postMessage({ 
+                                type: 'login-success', 
+                                username: username,
+                                token: token
+                            }, '*');
+                            
+                            console.log('已发送登录成功消息');
+                            
+                            // 清空表单
+                            loginForm.reset();
+                            
+                            // 刷新页面
+                            setTimeout(() => {
+                                console.log('准备刷新页面...');
+                                window.parent.location.reload();
+                            }, 2000);
+                        } else {
+                            // 登录失败
+                            console.log('用户验证失败');
+                            showAlert('用户名或密码错误，请重试');
+                            
+                            // 清空密码字段
+                            passwordInput.value = '';
+                            passwordInput.focus();
+                        }
+                    } catch (error) {
+                        console.error('登录过程发生错误:', error);
+                        showAlert('登录失败: ' + error.message);
+                        
+                        // 恢复按钮状态
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    }
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像版权检测系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --success-color: #4cc9a0;
+            --danger-color: #ef476f;
+            --warning-color: #ffd166;
+            --info-color: #4895ef;
+            --border-radius: 10px;
+            --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 标题样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            overflow: hidden;
+            margin-bottom: 30px;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            font-weight: 600;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            text-transform: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            transition: transform 0.6s;
+        }
+        
+        .btn:hover::after {
+            transform: translateX(200%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* 上传区域样式 */
+        .drop-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 35px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .drop-area:hover {
+            background-color: rgba(67, 97, 238, 0.08);
+            transform: scale(1.01);
+        }
+        
+        .drop-area p {
+            margin: 10px 0;
+        }
+        
+        .drop-area i {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all var(--transition-speed);
+        }
+        
+        /* 结果和加载样式 */
+        .result {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 25px 0;
+            display: none;
+        }
+        
+        .spinner-border {
+            color: var(--primary-color);
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 600;
+            margin: 0 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all var(--transition-speed);
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* 认证界面样式 */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.5s ease;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            width: 90%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform: scale(1);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 1;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px 0;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            z-index: 10;
+            user-select: none;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .auth-tab:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .auth-tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background-color: white;
+            transition: width 0.3s;
+        }
+        
+        .auth-tab:hover::after {
+            width: 50%;
+        }
+        
+        .auth-tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+        }
+        
+        .auth-tab.active::after {
+            width: 70%;
+        }
+        
+        /* 强化标签的用户体验 */
+        .auth-tab i {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+        
+        /* 添加点击效果 */
+        .auth-tab:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+        
+        .auth-content {
+            padding: 0;
+            height: 500px;
+            position: relative;
+        }
+        
+        .auth-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transition: opacity 0.3s;
+        }
+        
+        /* 欢迎提示样式 */
+        .welcome-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            animation: slideDown 0.5s forwards;
+            min-width: 300px;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -70px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+        
+        /* 拒绝访问提示样式 */
+        #accessDenied {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 9999;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        /* 动画效果 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(calc(-50% - 5px)); }
+            20%, 40%, 60%, 80% { transform: translateX(calc(-50% + 5px)); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* 响应式样式调整 */
+        @media (max-width: 768px) {
+            .auth-container {
+                width: 95%;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 认证遮罩层 -->
+        <div id="authOverlay" class="auth-overlay">
+            <!-- 认证界面 -->
+            <div id="authContainer" class="auth-container">
+                <div class="auth-tabs">
+                    <div id="loginTab" class="auth-tab active" onclick="switchToLogin()">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </div>
+                    <div id="registerTab" class="auth-tab" onclick="switchToRegister()">
+                        <i class="fas fa-user-plus"></i> 注册
+                    </div>
+                </div>
+                <div class="auth-content">
+                    <iframe id="authFrame" class="auth-frame" src="login.html" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 欢迎提示 -->
+        <div id="welcomeAlert" class="alert alert-success welcome-alert" role="alert" style="display:none">
+            <i class="fas fa-check-circle"></i> 登录成功！欢迎回来，<span id="welcomeUser"></span>
+        </div>
+
+        <!-- 访问拒绝提示 -->
+        <div id="accessDenied">
+            <i class="fas fa-exclamation-triangle"></i> 请先登录后再访问系统
+        </div>
+
+        <!-- 应用内容 -->
+        <div id="appContent" style="display:none;" class="fade-in">
+            <!-- 导航栏 -->
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <i class="fas fa-fingerprint logo-icon"></i>图像版权检测系统
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="index.html">
+                                    <i class="fas fa-home"></i> 首页
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="ai_detection.html">
+                                    <i class="fas fa-robot"></i> AI图片检测
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="add_logo.html">
+                                    <i class="fas fa-database"></i> 管理Logo数据库
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html">
+                                    <i class="fas fa-user"></i> <span id="currentUser">个人中心</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://github.com/KyrieRudy/image-copyright-detection" target="_blank">
+                                    <i class="fas fa-code"></i> 查看源码
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="navLogoutBtn">
+                                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header">
+                <h1>图像版权检测系统</h1>
+                <p class="text-muted">上传您的LOGO，检测是否存在侵权行为。</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-cloud-upload-alt"></i> 上传图像
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <div id="drop-area" class="drop-area flex-grow-1">
+                                <p><i class="fas fa-file-image fa-2x mb-2"></i></p>
+                                <p>拖放图像文件到此处或</p>
+                                <input type="file" id="fileElem" accept="image/*" style="display:none">
+                                <button class="btn btn-primary" id="fileSelect">
+                                    <i class="fas fa-folder-open"></i> 选择图像
+                                </button>
+                            </div>
+                            <div class="text-center mt-3">
+                                <img id="preview" style="display:none">
+                            </div>
+                            <div id="uploadStatus" class="loading">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>正在检测中，请稍候...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-list-alt"></i> 检测结果
+                        </div>
+                        <div class="card-body">
+                            <div id="alertMessage" class="alert alert-info" role="alert">
+                                <i class="fas fa-info-circle"></i> 请上传图像进行检测
+                            </div>
+                            <div id="result" class="result"></div>
+                            <!-- 添加管理员操作区 -->
+                            <div class="admin-section mt-4 pt-3 border-top">
+                                <h5 class="mb-3"><i class="fas fa-wrench me-2"></i>系统管理</h5>
+                                <div class="d-grid gap-2">
+                                    <button id="resetFeaturesBtn" class="btn btn-warning">
+                                        <i class="fas fa-sync-alt me-2"></i>重置特征库（修复检测问题）
+                                    </button>
+                                    <div id="resetResult" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+            <div class="footer">
+                <p>图像版权检测系统 &copy; 2025 版权所有</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 上传相关元素
+            const dropArea = document.getElementById('drop-area');
+            const fileElem = document.getElementById('fileElem');
+            const fileSelect = document.getElementById('fileSelect');
+            const preview = document.getElementById('preview');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const result = document.getElementById('result');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            // 文件上传相关功能
+            // 处理文件选择器点击
+            fileSelect.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileElem.click();
+            });
+            
+            // 处理文件选择
+            fileElem.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            // 处理拖放
+            dropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('drop-area-highlight');
+            });
+            
+            dropArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drop-area-highlight');
+            });
+            
+            dropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drop-area-highlight');
+                
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                handleFiles(files);
+            });
+            
+            // 处理文件上传
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    
+                    // 检查是否为图片
+                    if (!file.type.match('image.*')) {
+                        showAlert('请选择图片文件', 'warning');
+                        return;
+                    }
+                    
+                    // 显示预览
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                    
+                    // 上传图片
+                    uploadImage(file);
+                }
+            }
+            
+            // 上传图片到服务器
+            function uploadImage(file) {
+                // 重置结果区域
+                result.innerHTML = '';
+                alertMessage.style.display = 'none';
+                
+                // 显示加载状态
+                uploadStatus.style.display = 'block';
+                
+                // 创建FormData
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                // 创建图片的URL，用于传递给详细结果页面
+                const imageUrl = URL.createObjectURL(file);
+                
+                // 发送请求到后端
+                fetch('http://localhost:5000/detect', {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'cors',
+                    credentials: 'omit'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应错误');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        showAlert(data.error, 'danger');
+                    } else {
+                        // 获取检测ID，如果没有，则生成一个临时ID
+                        const detectionId = data.detection_id || 'temp_' + new Date().getTime();
+                        
+                        // 获取结果文本
+                        const resultText = data.result || (typeof data === 'string' ? data : JSON.stringify(data));
+                        
+                        // 构建结果HTML，始终包含查看详细结果的链接
+                        const resultHtml = `
+                            <div class="alert alert-info">
+                                <h4>检测结果</h4>
+                                <p>${resultText}</p>
+                                <a href="detailed_result.html?id=${detectionId}&image=${encodeURIComponent(imageUrl)}" class="btn btn-outline-primary btn-sm mt-2" target="_blank">
+                                    查看详细分析 <i class="fas fa-chart-bar"></i>
+                                </a>
+                            </div>
+                        `;
+                        
+                        result.innerHTML = resultHtml;
+                        
+                        // 如果后端没有返回detection_id，可以将结果临时存储在localStorage中
+                        if (!data.detection_id) {
+                            try {
+                                const tempResult = {
+                                    main_result: resultText,
+                                    matches: [{
+                                        name: "未能获取完整匹配数据",
+                                        similarity: 0.0,
+                                        category: "未知"
+                                    }]
+                                };
+                                localStorage.setItem('temp_detection_' + detectionId, JSON.stringify(tempResult));
+                            } catch (e) {
+                                console.error('无法存储临时结果', e);
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('检测失败，请稍后重试: ' + error.message, 'danger');
+                })
+                .finally(() => {
+                    uploadStatus.style.display = 'none';
+                });
+            }
+            
+            // 显示提示信息
+            function showAlert(message, type) {
+                const fileInput = fileElem;
+                let detailsLink = '';
+                
+                if (fileInput && fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    const imageUrl = URL.createObjectURL(file);
+                    const tempId = 'temp_' + new Date().getTime();
+                    
+                    // 存储临时错误信息
+                    try {
+                        const tempResult = {
+                            main_result: message,
+                            matches: [{
+                                name: "处理失败",
+                                similarity: 0.0,
+                                category: "错误"
+                            }]
+                        };
+                        localStorage.setItem('temp_detection_' + tempId, JSON.stringify(tempResult));
+                    } catch (e) {
+                        console.error('无法存储临时结果', e);
+                    }
+                    
+                    detailsLink = `
+                        <br><br>
+                        <a href="detailed_result.html?id=${tempId}&image=${encodeURIComponent(imageUrl)}" class="btn btn-outline-info btn-sm" target="_blank">
+                            查看详细信息 <i class="fas fa-search"></i>
+                        </a>
+                    `;
+                }
+                
+                const alertHtml = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-${type === 'danger' ? 'exclamation-triangle' : type === 'warning' ? 'exclamation-circle' : 'info-circle'}"></i> 
+                        ${message}${detailsLink}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+                
+                result.innerHTML = alertHtml;
+                alertMessage.style.display = 'none';
+            }
+
+            // 登录消息监听
+            window.addEventListener('message', function(event) {
+                // 验证消息源
+                if (event.origin === window.location.origin) {
+                    const data = event.data;
+                    
+                    if (data && data.type === 'login-success') {
+                        console.log('收到登录成功消息:', data);
+                        
+                        // 保存用户信息到localStorage
+                        if (data.username) {
+                            localStorage.setItem('currentUser', data.username);
+                            console.log('已保存用户信息:', data.username);
+                        }
+                        
+                        if (data.token) {
+                            localStorage.setItem('userToken', data.token);
+                            console.log('已保存用户令牌:', data.token);
+                        }
+                        
+                        localStorage.setItem('lastActivity', Date.now());
+                        console.log('已更新最后活动时间');
+                        
+                        // 重新检查登录状态，刷新UI
+                        console.log('准备刷新登录状态...');
+                        setTimeout(() => {
+                            checkLogin();
+                            console.log('已刷新登录状态UI');
+                        }, 100);
+                    } else if (data && data.type === 'show-register') {
+                        // 显示注册标签
+                        registerTab.click();
+                    } else if (data && data.type === 'show-login') {
+                        // 显示登录标签
+                        loginTab.click();
+                    } else if (data && data.type === 'register-success') {
+                        // 注册成功后自动切换到登录标签
+                        setTimeout(function() {
+                            loginTab.click();
+                        }, 1000);
+                    }
+                }
+            });
+
+            // 检查用户会话是否过期
+            function checkSessionTimeout() {
+                const lastActivity = localStorage.getItem('lastActivity');
+                if (lastActivity) {
+                    const currentTime = new Date().getTime();
+                    const inactiveTime = currentTime - parseInt(lastActivity);
+                    
+                    // 如果超过2小时无活动，则自动登出（7200000毫秒 = 2小时）
+                    if (inactiveTime > 7200000) {
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('userToken');
+                        localStorage.removeItem('lastActivity');
+                        
+                        // 显示超时提示
+                        alert('您的会话已超时，请重新登录');
+                        
+                        // 重新检查登录
+                        checkLogin();
+                    } else {
+                        // 更新最后活动时间
+                        localStorage.setItem('lastActivity', currentTime);
+                    }
+                }
+            }
+
+            // 更新最后活动时间
+            function updateLastActivity() {
+                if (localStorage.getItem('currentUser')) {
+                    localStorage.setItem('lastActivity', new Date().getTime());
+                }
+            }
+            
+            // 监听页面活动，更新最后活动时间
+            ['click', 'keypress', 'scroll', 'mousemove'].forEach(function(event) {
+                document.addEventListener(event, updateLastActivity);
+            });
+
+            // 页面加载时检查会话超时
+            checkSessionTimeout();
+            
+            // 每30分钟检查一次会话超时
+            setInterval(checkSessionTimeout, 1800000);
+
+            // 周期性检查登录状态，防止用户手动修改localStorage
+            setInterval(function() {
+                if (!localStorage.getItem('currentUser')) {
+                    checkLogin();
+                }
+            }, 30000); // 每30秒检查一次
+            
+            // 设置拖放区域的样式
+            dropArea.classList.add('drop-area-ready');
+            
+            // 添加重置特征库按钮的点击事件
+            document.getElementById('resetFeaturesBtn').addEventListener('click', function() {
+                if (!confirm('确定要重置并重新生成所有特征向量吗？这个过程可能需要几分钟时间。')) {
+                    return;
+                }
+                
+                const resetResult = document.getElementById('resetResult');
+                resetResult.innerHTML = `
+                    <div class="alert alert-info">
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                            <span class="visually-hidden">处理中...</span>
+                        </div>
+                        正在重置特征库，请勿刷新页面...
+                    </div>
+                `;
+                
+                const baseUrl = document.location.origin.includes('localhost') ? 'http://localhost:5000' : document.location.origin;
+                
+                // 显示重置中状态
+                resetBtn.disabled = true;
+                resetBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 正在重置...';
+                resetResult.innerHTML = '<div class="alert alert-info mt-2">正在重置特征库，请稍候...</div>';
+                
+                // 请求重置
+                fetch(baseUrl + '/reset_features', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('重置特征库结果:', data);
+                    
+                    // 恢复按钮状态
+                    resetBtn.disabled = false;
+                    resetBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>重置特征库（修复检测问题）';
+                    
+                    if (data.success) {
+                        resetResult.innerHTML = `<div class="alert alert-success mt-2">
+                            <strong>重置成功!</strong> 处理了 ${data.processed} 个Logo，共 ${data.total_brands} 个品牌。
+                        </div>`;
+                        
+                        // 3秒后清除消息
+                        setTimeout(() => {
+                            resetResult.innerHTML = '';
+                        }, 3000);
+                    } else {
+                        resetResult.innerHTML = `<div class="alert alert-danger mt-2">
+                            <strong>重置失败:</strong> ${data.error}
+                        </div>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('重置特征库错误:', error);
+                    resetBtn.disabled = false;
+                    resetBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>重置特征库（修复检测问题）';
+                    resetResult.innerHTML = `<div class="alert alert-danger mt-2">
+                        <strong>发生错误:</strong> ${error.message}
+                    </div>`;
+                });
+            });
+
+            // 页面加载时加载分类
+            loadCategories();
+
+            // 初始化重置特征按钮
+            initResetFeaturesButton();
+        });
+
+        // 直接在页面中定义切换函数
+        function switchToLogin() {
+            console.log('直接切换到登录页面');
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const authFrame = document.getElementById('authFrame');
+            
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            
+            authFrame.src = 'login.html';
+        }
+        
+        function switchToRegister() {
+            console.log('直接切换到注册页面');
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const authFrame = document.getElementById('authFrame');
+            
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            
+            authFrame.src = 'register.html';
+        }
+    </script>
+    <!-- 添加调试功能，方便用户排查问题 -->
+    <script>
+        // 点击事件调试
+        console.log('调试模式已激活 - 监控标签点击');
+        
+        // 在页面上添加一个隐藏的调试面板，按Ctrl+D打开
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                // 检查是否已存在调试面板
+                let debugPanel = document.getElementById('debugPanel');
+                if (!debugPanel) {
+                    debugPanel = document.createElement('div');
+                    debugPanel.id = 'debugPanel';
+                    debugPanel.style.position = 'fixed';
+                    debugPanel.style.bottom = '0';
+                    debugPanel.style.right = '0';
+                    debugPanel.style.width = '300px';
+                    debugPanel.style.height = '150px';
+                    debugPanel.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                    debugPanel.style.color = 'white';
+                    debugPanel.style.padding = '10px';
+                    debugPanel.style.fontFamily = 'monospace';
+                    debugPanel.style.fontSize = '12px';
+                    debugPanel.style.overflow = 'auto';
+                    debugPanel.style.zIndex = '9999';
+                    debugPanel.innerHTML = '<div>调试面板 (Ctrl+D隐藏)</div><div id="debugLog"></div>';
+                    document.body.appendChild(debugPanel);
+                    
+                    // 覆盖控制台日志方法
+                    const oldLog = console.log;
+                    console.log = function() {
+                        oldLog.apply(console, arguments);
+                        const logItem = document.createElement('div');
+                        let message = Array.from(arguments).join(' ');
+                        logItem.textContent = new Date().toLocaleTimeString() + ': ' + message;
+                        document.getElementById('debugLog').appendChild(logItem);
+                    };
+                    
+                    console.log('调试面板已打开');
+                    
+                    // 测试标签点击
+                    document.getElementById('loginTab').addEventListener('click', function() {
+                        console.log('登录标签点击事件触发');
+                    });
+                    document.getElementById('registerTab').addEventListener('click', function() {
+                        console.log('注册标签点击事件触发');
+                    });
+                } else {
+                    debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+        });
+        
+        // 强制刷新缓存的解决方案
+        // 每次加载页面时添加一个随机查询参数到iframe的URL
+        // 缓存刷新功能已移除，防止在用户填写登录/注册表单时被中断
+    </script>
+</body>
+</html> 

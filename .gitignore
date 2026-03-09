@@ -1,0 +1,27 @@
+# Local environments and IDE state
+.venv/
+.idea/
+.cursor/
+
+# Large datasets and generated model artifacts
+data/
+models/
+backend/models/
+*.pkl
+*.pkl.bak
+
+# Runtime caches, uploads, and local state
+temp_uploads/
+instance/
+backend/temp/
+backend/temp_uploads/
+backend/instance/
+backend/__pycache__/
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite
+
+# Logs
+*.log
+training.log

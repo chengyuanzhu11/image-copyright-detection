@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo数据库管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logo-card {
+            margin-bottom: 20px;
+        }
+        .logo-image {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: contain;
+        }
+        .category-section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Logo数据库管理</h1>
+        
+        <!-- 添加新Logo表单 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">添加新Logo</h5>
+            </div>
+            <div class="card-body">
+                <form id="addLogoForm">
+                    <div class="mb-3">
+                        <label for="logoName" class="form-label">Logo名称</label>
+                        <input type="text" class="form-control" id="logoName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logoCategory" class="form-label">分类</label>
+                        <input type="text" class="form-control" id="logoCategory" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logoFile" class="form-label">Logo图片</label>
+                        <input type="file" class="form-control" id="logoFile" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">添加Logo</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Logo列表 -->
+        <div id="logoList" class="row">
+            <!-- Logo卡片将通过JavaScript动态添加 -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 获取Logo列表
+        async function loadLogos() {
+            try {
+                const response = await fetch('/logos');
+                const logos = await response.json();
+                displayLogos(logos);
+            } catch (error) {
+                console.error('加载Logo失败:', error);
+                alert('加载Logo失败，请检查网络连接');
+            }
+        }
+
+        // 显示Logo列表
+        function displayLogos(logos) {
+            const logoList = document.getElementById('logoList');
+            logoList.innerHTML = '';
+
+            // 按分类分组
+            const categories = {};
+            logos.forEach(logo => {
+                if (!categories[logo.category]) {
+                    categories[logo.category] = [];
+                }
+                categories[logo.category].push(logo);
+            });
+
+            // 显示每个分类的Logo
+            for (const [category, categoryLogos] of Object.entries(categories)) {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'category-section';
+                categorySection.innerHTML = `
+                    <h3>${category}</h3>
+                    <div class="row">
+                        ${categoryLogos.map(logo => `
+                            <div class="col-md-4">
+                                <div class="card logo-card">
+                                    <img src="${logo.path}" class="card-img-top logo-image" alt="${logo.name}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${logo.name}</h5>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteLogo('${logo.id}')">删除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                logoList.appendChild(categorySection);
+            }
+        }
+
+        // 添加新Logo
+        document.getElementById('addLogoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('name', document.getElementById('logoName').value);
+            formData.append('category', document.getElementById('logoCategory').value);
+            formData.append('file', document.getElementById('logoFile').files[0]);
+
+            try {
+                const response = await fetch('/add_logo', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Logo添加成功');
+                    loadLogos();
+                    e.target.reset();
+                } else {
+                    throw new Error('添加失败');
+                }
+            } catch (error) {
+                console.error('添加Logo失败:', error);
+                alert('添加Logo失败，请重试');
+            }
+        });
+
+        // 删除Logo
+        async function deleteLogo(logoId) {
+            if (!confirm('确定要删除这个Logo吗？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/delete_logo/${logoId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Logo删除成功');
+                    loadLogos();
+                } else {
+                    throw new Error('删除失败');
+                }
+            } catch (error) {
+                console.error('删除Logo失败:', error);
+                alert('删除Logo失败，请重试');
+            }
+        }
+
+        // 页面加载时获取Logo列表
+        document.addEventListener('DOMContentLoaded', loadLogos);
+    </script>
+</body>
+</html> 

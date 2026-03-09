@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理Logo数据库 - 图像版权检测系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --success-color: #4cc9a0;
+            --danger-color: #ef476f;
+            --warning-color: #ffd166;
+            --info-color: #4895ef;
+            --border-radius: 10px;
+            --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 标题样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            overflow: hidden;
+            margin-bottom: 30px;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            font-weight: 600;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            text-transform: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            transition: transform 0.6s;
+        }
+        
+        .btn:hover::after {
+            transform: translateX(200%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, var(--success-color), var(--info-color));
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(45deg, var(--info-color), var(--success-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* 表单样式 */
+        .form-control {
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 600;
+            margin: 0 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all var(--transition-speed);
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        /* Logo列表的滚动区域样式 */
+        .logo-list-container {
+            max-height: 400px; 
+            overflow-y: auto;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            background-color: var(--light-bg);
+        }
+        
+        /* 设置每个区块有足够的间距 */
+        .section-spacing {
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* 分类标签样式 */
+        .nav-tabs {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-color) !important;
+            border: none;
+            border-radius: 0;
+            padding: 10px 20px;
+            margin: 0 5px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .nav-tabs .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.3s;
+        }
+        
+        .nav-tabs .nav-link:hover::after {
+            width: 70%;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color) !important;
+            background-color: transparent;
+            font-weight: 600;
+        }
+        
+        .nav-tabs .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Logo列表项样式 */
+        .list-group-item {
+            border: none;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            padding: 12px 15px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .list-group-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-weight: 500;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        }
+        
+        /* 加载动画 */
+        .spinner-border {
+            color: var(--primary-color);
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* 提示框样式 */
+        .alert {
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        /* 图片预览区域 */
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all var(--transition-speed);
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        /* 认证界面样式 */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.5s ease;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            width: 90%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform: scale(1);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 1;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .auth-tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background-color: white;
+            transition: width 0.3s;
+        }
+        
+        .auth-tab:hover::after {
+            width: 50%;
+        }
+        
+        .auth-tab.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-tab.active::after {
+            width: 70%;
+        }
+        
+        .auth-content {
+            padding: 0;
+            height: 500px;
+            position: relative;
+        }
+        
+        .auth-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transition: opacity 0.3s;
+        }
+        
+        /* 欢迎提示样式 */
+        .welcome-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            animation: slideDown 0.5s forwards;
+            min-width: 300px;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -70px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+        
+        /* 拒绝访问提示样式 */
+        #accessDenied {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 9999;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        /* 动画效果 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(calc(-50% - 5px)); }
+            20%, 40%, 60%, 80% { transform: translateX(calc(-50% + 5px)); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* 响应式样式调整 */
+        @media (max-width: 768px) {
+            .auth-container {
+                width: 95%;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 强制导航栏显示的样式 */
+        #navbarNav {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        @media (max-width: 991.98px) {
+            #navbarNav {
+                flex-direction: column;
+            }
+            
+            .nav-link[href="ai_detection.html"] {
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 认证遮罩层 -->
+        <div id="authOverlay" class="auth-overlay">
+            <!-- 认证界面 -->
+            <div id="authContainer" class="auth-container">
+                <div class="auth-tabs">
+                    <div id="loginTab" class="auth-tab active">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </div>
+                    <div id="registerTab" class="auth-tab">
+                        <i class="fas fa-user-plus"></i> 注册
+                    </div>
+                </div>
+                <div class="auth-content">
+                    <iframe id="authFrame" class="auth-frame" src="login.html" frameborder="0"></iframe>
+                </div>
+            </div>
+            <!-- 调试辅助按钮 -->
+            <div class="mt-3 text-center" style="width: 100%;">
+                <button onclick="localStorage.clear(); window.location.reload();" class="btn btn-sm btn-danger">
+                    <i class="fas fa-exclamation-triangle"></i> 重置登录状态
+                </button>
+                <button onclick="window.location.href='add_logo.html?forceLogin=1'" class="btn btn-sm btn-warning">
+                    <i class="fas fa-redo"></i> 重试登录
+                </button>
+            </div>
+        </div>
+
+        <!-- 欢迎提示 -->
+        <div id="welcomeAlert" class="alert alert-success welcome-alert" role="alert" style="display:none">
+            <i class="fas fa-check-circle"></i> 登录成功！欢迎回来，<span id="welcomeUser"></span>
+        </div>
+
+        <!-- 访问拒绝提示 -->
+        <div id="accessDenied">
+            <i class="fas fa-exclamation-triangle"></i> 请先登录后再访问系统
+        </div>
+
+        <!-- 应用内容 -->
+        <div id="appContent" style="display:none;" class="fade-in">
+            <!-- 导航栏 -->
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <i class="fas fa-fingerprint logo-icon"></i>图像版权检测系统
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html" style="display: inline-block !important; color: white; font-weight: 600; margin: 0 10px; padding: 8px 15px; border-radius: 20px; transition: all 0.3s;">
+                                    <i class="fas fa-home"></i> 首页
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="ai_detection.html" style="display: inline-block !important; background-color: rgba(255, 255, 255, 0.2); color: #ffff00 !important; font-weight: 700; margin: 0 10px; padding: 8px 15px; border-radius: 20px; transition: all 0.3s; text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+                                    <i class="fas fa-robot"></i> AI图片检测
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="add_logo.html" style="display: inline-block !important; color: white; font-weight: 600; margin: 0 10px; padding: 8px 15px; border-radius: 20px; transition: all 0.3s;">
+                                    <i class="fas fa-database"></i> 管理Logo数据库
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html" style="display: inline-block !important; color: white; font-weight: 600; margin: 0 10px; padding: 8px 15px; border-radius: 20px; transition: all 0.3s;">
+                                    <i class="fas fa-user"></i> <span id="currentUser">个人中心</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://github.com/KyrieRudy/image-copyright-detection" target="_blank" style="display: inline-block !important; color: white; font-weight: 600; margin: 0 10px; padding: 8px 15px; border-radius: 20px; transition: all 0.3s;">
+                                    <i class="fas fa-code"></i> 查看源码
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="navLogoutBtn" style="display: inline-block !important; color: white; font-weight: 600; margin: 0 10px; padding: 8px 15px; border-radius: 20px; transition: all 0.3s;">
+                                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header">
+                <h1>管理Logo数据库</h1>
+                <p>管理数据库中的Logo，用于图像版权检测</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-plus-circle me-2"></i> 添加单个Logo
+                        </div>
+                        <div class="card-body">
+                            <form id="logoForm">
+                                <div class="mb-3">
+                                    <label for="logoName" class="form-label"><i class="fas fa-tag me-2"></i>Logo名称</label>
+                                    <input type="text" class="form-control" id="logoName" placeholder="输入Logo名称" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="logoCategory" class="form-label"><i class="fas fa-folder me-2"></i>Logo分类</label>
+                                    <input type="text" class="form-control" id="logoCategory" placeholder="输入Logo分类">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="logoImage" class="form-label"><i class="fas fa-image me-2"></i>Logo图像</label>
+                                    <input type="file" class="form-control" id="logoImage" accept="image/*" required>
+                                </div>
+                                
+                                <div id="imagePreview" class="my-4 text-center" style="display: none;">
+                                    <img id="preview" class="img-thumbnail" style="max-height: 200px;">
+                                </div>
+                                
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>添加Logo
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <div id="loading" class="mt-3 text-center" style="display: none;">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">加载中...</span>
+                                </div>
+                                <span class="ms-2">正在处理，请稍候...</span>
+                            </div>
+                            
+                            <div id="result" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-database me-2"></i> 批量导入Logo
+                        </div>
+                        <div class="card-body">
+                            <p class="text-center mb-4">从Logo-2K+数据集导入Logo到数据库</p>
+                            
+                            <div class="alert alert-info mb-4">
+                                <i class="fas fa-info-circle me-2"></i><strong>注意:</strong> 该操作会自动处理data/Logo-2K+目录下的所有Logo图像，提取特征并导入到数据库。<br>
+                                这个过程可能需要几分钟到几十分钟不等，取决于您的电脑性能和数据集大小。
+                            </div>
+                            
+                            <div class="alert alert-warning mb-4">
+                                <i class="fas fa-exclamation-triangle me-2"></i><strong>如果Web导入失败，</strong> 您也可以直接在命令行运行以下命令进行导入：<br>
+                                <code>cd backend</code><br>
+                                <code>python run_import.py</code>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="regenerateFeatures">
+                                <label class="form-check-label" for="regenerateFeatures">
+                                    <i class="fas fa-sync me-2"></i>重新生成特征向量（解决检测问题）
+                                </label>
+                                <small class="form-text text-light">选中此项将使用改进的特征提取算法重新处理所有Logo，有助于提高检测准确率</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="datasetPath" class="form-label"><i class="fas fa-folder-open me-2"></i>数据集路径</label>
+                                <input type="text" class="form-control" id="datasetPath" placeholder="默认: ../data/Logo-2K+" value="../data/Logo-2K+">
+                            </div>
+                            
+                            <div class="text-center">
+                                <button id="importDataset" class="btn btn-success">
+                                    <i class="fas fa-file-import me-2"></i>开始导入数据集
+                                </button>
+                            </div>
+                            <div id="importResult" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4" id="logoListCard">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-list me-2"></i> 数据库中的Logo
+                    </div>
+                    <button class="btn btn-sm btn-outline-light" id="logoListToggle" type="button" data-bs-toggle="collapse" data-bs-target="#logoListCollapse" aria-expanded="false" aria-controls="logoListCollapse">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="logoListCollapse" class="collapse">
+                    <div class="card-body">
+                        <div id="logoContent">
+                            <!-- 内容将在点击时动态加载 -->
+                            <div class="text-center">
+                                <button id="loadLogoDataBtn" class="btn btn-primary">
+                                    <i class="fas fa-sync-alt me-2"></i>加载Logo数据
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>图像版权检测系统 &copy; 2025 版权所有</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== 后续的页面功能代码 =====
+            
+            // 获取页面元素
+            const categoryFilter = document.getElementById('categoryFilter');
+            const logoGrid = document.getElementById('logoGrid');
+            const importDatasetForm = document.getElementById('importDatasetForm');
+            const importStatus = document.getElementById('importStatus');
+            const addLogoForm = document.getElementById('addLogoForm');
+            
+            // 获取域名
+            const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:5000' 
+                : window.location.origin;
+                
+            // 加载Logo分类
+            function loadCategories() {
+                fetch(baseUrl + '/categories')
+                .then(response => response.json())
+                .then(categories => {
+                    // 清空当前选项
+                    categoryFilter.innerHTML = '<option value="">所有分类</option>';
+                    
+                    // 添加分类选项
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category;
+                        option.textContent = category;
+                        categoryFilter.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('加载分类失败:', error);
+                    alert('加载分类失败，请刷新页面重试');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

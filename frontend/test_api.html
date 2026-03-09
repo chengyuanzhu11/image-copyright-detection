@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API测试页面</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #4361ee; }
+        button { background: #4361ee; color: white; border: none; padding: 10px 15px; cursor: pointer; margin: 10px 0; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; min-height: 100px; white-space: pre-wrap; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>API连接测试</h1>
+    
+    <div>
+        <input type="file" id="imageFile" accept="image/*">
+        <button id="testBtn">测试API连接</button>
+    </div>
+    
+    <div id="result">结果将显示在这里</div>
+    
+    <script>
+        document.getElementById('testBtn').addEventListener('click', function() {
+            const resultDiv = document.getElementById('result');
+            const fileInput = document.getElementById('imageFile');
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                resultDiv.innerHTML = '<p class="error">请选择一个图片文件</p>';
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            resultDiv.innerHTML = '<p>正在测试连接...</p>';
+            
+            // 测试各种不同的路径
+            const apiPaths = [
+                '/detect_ai_generated',
+                '/api/detect_ai_generated',
+                'detect_ai_generated',
+                'http://localhost:5000/detect_ai_generated',
+                window.location.origin + '/detect_ai_generated'
+            ];
+            
+            let testIndex = 0;
+            
+            function testNextPath() {
+                if (testIndex >= apiPaths.length) {
+                    resultDiv.innerHTML += '<p class="error">所有路径测试完成，均未成功</p>';
+                    return;
+                }
+                
+                const path = apiPaths[testIndex];
+                testIndex++;
+                
+                resultDiv.innerHTML += `<p>尝试路径: ${path}</p>`;
+                
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('threshold', '50');
+                
+                fetch(path, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        resultDiv.innerHTML += `<p class="error">路径 ${path} 请求失败: ${response.status} ${response.statusText}</p>`;
+                        testNextPath();
+                        return;
+                    }
+                    return response.json().then(data => {
+                        resultDiv.innerHTML += `<p class="success">路径 ${path} 请求成功!</p>`;
+                        resultDiv.innerHTML += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    });
+                })
+                .catch(error => {
+                    resultDiv.innerHTML += `<p class="error">路径 ${path} 发生错误: ${error.message}</p>`;
+                    testNextPath();
+                });
+            }
+            
+            // 开始测试
+            testNextPath();
+        });
+    </script>
+</body>
+</html> 

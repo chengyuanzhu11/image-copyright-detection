@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI生成图片检测 - 图像版权检测系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --success-color: #4cc9a0;
+            --danger-color: #ef476f;
+            --warning-color: #ffd166;
+            --info-color: #4895ef;
+            --border-radius: 10px;
+            --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 标题样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            overflow: hidden;
+            margin-bottom: 30px;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            font-weight: 600;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            text-transform: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* 上传区域样式 */
+        .drop-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 35px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .drop-area:hover {
+            background-color: rgba(67, 97, 238, 0.08);
+            transform: scale(1.01);
+        }
+        
+        .drop-area p {
+            margin: 10px 0;
+        }
+        
+        .drop-area i {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all var(--transition-speed);
+        }
+        
+        /* 结果和加载样式 */
+        .result {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 25px 0;
+            display: none;
+        }
+        
+        .spinner-border {
+            color: var(--primary-color);
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 600;
+            margin: 0 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all var(--transition-speed);
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* 认证界面样式 */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.5s ease;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            width: 90%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform: scale(1);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 1;
+        }
+        
+        /* 结果区域样式 */
+        .result-section {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        
+        .probability-gauge {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .probability-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--success-color), var(--danger-color));
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+        
+        .feature-stat {
+            margin: 8px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .info-box {
+            background-color: #e7f5ff;
+            border-left: 4px solid var(--info-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box h5 {
+            color: #3a77bf;
+            margin-bottom: 10px;
+        }
+        
+        /* 灵敏度设置样式 */
+        .sensitivity-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .sensitivity-card .form-range::-webkit-slider-thumb {
+            background: var(--primary-color);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        
+        /* 调试面板样式 */
+        #debugPanel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            max-height: 200px;
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow: auto;
+            z-index: 9999;
+            display: none;
+            border-top-left-radius: 5px;
+        }
+        
+        #debugLog {
+            padding: 5px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 应用内容 -->
+        <div id="appContent">
+            <!-- 导航栏 -->
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-fingerprint logo-icon"></i>图像版权检测系统
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">
+                                    <i class="fas fa-home"></i> 首页
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="ai_detection.html">
+                                    <i class="fas fa-robot"></i> AI图片检测
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="add_logo.html">
+                                    <i class="fas fa-database"></i> 管理Logo数据库
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="profile.html">
+                                    <i class="fas fa-user"></i> <span id="currentUser">个人中心</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header">
+                <h1>AI生成图片检测</h1>
+                <p class="text-muted">上传图片，快速检测是否为AI生成的虚拟照片。</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-cloud-upload-alt"></i> 上传图像
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <div id="drop-area" class="drop-area flex-grow-1">
+                                <p><i class="fas fa-file-image fa-2x mb-2"></i></p>
+                                <p>拖放图像文件到此处或</p>
+                                <input type="file" id="fileElem" accept="image/*" style="display:none">
+                                <button class="btn btn-primary" id="fileSelect">
+                                    <i class="fas fa-folder-open"></i> 选择图像
+                                </button>
+                            </div>
+                            <div class="text-center mt-3">
+                                <img id="preview" style="display:none">
+                            </div>
+                            <div id="uploadStatus" class="loading">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>正在分析中，请稍候...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-search"></i> 检测结果
+                        </div>
+                        <div class="card-body">
+                            <div id="alertMessage" class="alert alert-info" role="alert">
+                                <i class="fas fa-info-circle"></i> 请上传图像进行AI生成检测
+                            </div>
+                            <div id="result" class="result"></div>
+                            
+                            <!-- 检测灵敏度设置 -->
+                            <div class="card mb-3 sensitivity-card">
+                                <div class="card-header bg-light">
+                                    <i class="fas fa-sliders-h"></i> 检测灵敏度设置
+                                </div>
+                                <div class="card-body">
+                                    <label for="sensitivitySlider" class="form-label">AI判定阈值: <span id="thresholdValue">30</span>%</label>
+                                    <input type="range" class="form-range" id="sensitivitySlider" min="10" max="90" value="30">
+                                    <small class="form-text text-muted">
+                                        降低阈值可提高AI生成图片的检出率，但可能增加误判率。
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <!-- 信息说明 -->
+                            <div class="info-box">
+                                <h5><i class="fas fa-info-circle"></i> 什么是AI生成图片？</h5>
+                                <p>AI生成图片是指使用人工智能技术（如GAN、Diffusion、ChatGPT模型等）创建的图像，常用于创作艺术作品、虚拟人物或场景设计。</p>
+                                <p>我们的检测系统基于图像特征分析，能够帮助辨别上传的图片是真实拍摄还是AI生成。</p>
+                                
+                                <div class="mt-3">
+                                    <details>
+                                        <summary class="fw-bold text-primary cursor-pointer">AI图像的常见特征</summary>
+                                        <ul class="mt-2">
+                                            <li>过于完美的皮肤纹理和不自然的光影效果</li>
+                                            <li>背景或前景的不协调细节和奇怪模糊区域</li>
+                                            <li>手指、眼睛、牙齿等细节部位的异常</li>
+                                            <li>无法解释的几何异常或布局不合理</li>
+                                            <li>过度对称或不自然的姿势构图</li>
+                                        </ul>
+                                    </details>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>图像版权检测系统 &copy; 2025 版权所有</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 调试面板 -->
+    <div id="debugPanel" style="display:none;">
+        <div>调试面板 (Ctrl+D切换)</div>
+        <div id="debugLog"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 上传相关元素
+            const dropArea = document.getElementById('drop-area');
+            const fileElem = document.getElementById('fileElem');
+            const fileSelect = document.getElementById('fileSelect');
+            const preview = document.getElementById('preview');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const result = document.getElementById('result');
+            const alertMessage = document.getElementById('alertMessage');
+            const sensitivitySlider = document.getElementById('sensitivitySlider');
+            const thresholdValue = document.getElementById('thresholdValue');
+
+            // 灵敏度滑块事件
+            if(sensitivitySlider && thresholdValue) {
+                sensitivitySlider.addEventListener('input', function() {
+                    thresholdValue.textContent = this.value;
+                });
+            }
+
+            // 处理文件选择器点击
+            if(fileSelect && fileElem) {
+                fileSelect.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    fileElem.click();
+                });
+                
+                // 处理文件选择
+                fileElem.addEventListener('change', function() {
+                    handleFiles(this.files);
+                });
+            }
+            
+            // 拖放区域事件
+            if(dropArea) {
+                // 阻止默认行为
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+                
+                // 高亮拖放区域
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, function() {
+                        dropArea.classList.add('drop-area-highlight');
+                    });
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, function() {
+                        dropArea.classList.remove('drop-area-highlight');
+                    });
+                });
+                
+                // 处理拖放的文件
+                dropArea.addEventListener('drop', function(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    handleFiles(files);
+                });
+            }
+            
+            // 处理文件上传
+            function handleFiles(files) {
+                if(!files || files.length === 0) return;
+                
+                const file = files[0];
+                
+                // 检查是否为图片
+                if(!file.type.match('image.*')) {
+                    showAlert('请选择图片文件', 'warning');
+                    return;
+                }
+                
+                // 显示预览
+                if(preview) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+                
+                // 上传图片进行AI检测
+                uploadImage(file);
+            }
+            
+            // 显示提示消息
+            function showAlert(message, type = 'info') {
+                if(!alertMessage) return;
+                
+                alertMessage.className = `alert alert-${type}`;
+                alertMessage.innerHTML = `<i class="fas fa-${type === 'info' ? 'info-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'times-circle'}"></i> ${message}`;
+                alertMessage.style.display = 'block';
+            }
+            
+            // 上传图片进行AI检测
+            function uploadImage(file) {
+                // 记录日志
+                console.log('准备上传图片进行AI检测');
+                
+                // 重置结果区域
+                result.innerHTML = '';
+                alertMessage.style.display = 'none';
+                
+                // 显示加载状态
+                uploadStatus.style.display = 'block';
+                
+                // 创建FormData
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                // 获取用户设置的阈值
+                const threshold = sensitivitySlider ? sensitivitySlider.value : 30;
+                formData.append('threshold', threshold);
+                
+                // 获取当前域名和端口，确定后端API地址
+                // 尝试多个可能的API端点
+                const apiEndpoints = [
+                    '/detect_ai_generated',                     // 相对路径
+                    'http://localhost:5000/detect_ai_generated', // 主API
+                    'http://localhost:5001/detect_ai_generated'  // 简化版API
+                ];
+                
+                console.log('准备尝试以下API端点:', apiEndpoints);
+                console.log('文件大小:', (file.size / 1024).toFixed(2) + 'KB');
+                console.log('阈值设置:', threshold + '%');
+                
+                // 尝试连续请求多个端点，直到成功
+                function tryApiEndpoint(index) {
+                    if (index >= apiEndpoints.length) {
+                        // 所有端点都失败了
+                        throw new Error('所有API端点都无法连接，请检查服务器配置');
+                    }
+                    
+                    const apiUrl = apiEndpoints[index];
+                    console.log(`尝试连接API端点 (${index+1}/${apiEndpoints.length}): ${apiUrl}`);
+                    
+                    return fetch(apiUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error(`端点 ${apiUrl} 请求失败:`, response.status, response.statusText);
+                            // 尝试下一个端点
+                            return tryApiEndpoint(index + 1);
+                        }
+                        console.log(`成功连接到端点: ${apiUrl}`);
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error(`端点 ${apiUrl} 错误:`, error);
+                        // 尝试下一个端点
+                        return tryApiEndpoint(index + 1);
+                    });
+                }
+                
+                // 从第一个端点开始尝试
+                tryApiEndpoint(0)
+                .then(data => {
+                    console.log('收到API响应:', data);
+                    
+                    if (data.error) {
+                        showAlert(data.error, 'danger');
+                        return;
+                    }
+                    
+                    // 处理AI检测结果
+                    const probability = data.ai_generated_probability * 100;
+                    const conclusion = data.conclusion;
+                    const suspicious_features = data.suspicious_features || [];
+                    const analysis = data.analysis || {};
+                    
+                    // 显示结果
+                    let resultHtml = `
+                        <div class="text-center mb-4">
+                            <h3 class="mb-3">检测结论</h3>
+                            <div class="badge fs-4 mb-3 ${conclusion === 'AI生成' ? 'bg-danger' : 'bg-success'}" style="padding: 10px 20px;">
+                                ${conclusion === 'AI生成' ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-camera"></i>'} 
+                                ${conclusion}
+                            </div>
+                        </div>
+                        
+                        <div class="my-4">
+                            <h5>AI生成概率</h5>
+                            <div class="probability-gauge">
+                                <div class="probability-bar" style="width: ${probability}%"></div>
+                            </div>
+                            <div class="text-end">${probability.toFixed(2)}%</div>
+                            <div class="text-muted small">当前判定阈值: ${threshold}%</div>
+                        </div>
+                    `;
+                    
+                    // 添加可疑特征部分
+                    if (suspicious_features && suspicious_features.length > 0) {
+                        resultHtml += `
+                            <div class="result-section">
+                                <h5><i class="fas fa-search"></i> 发现可疑特征</h5>
+                                <ul class="list-group">
+                                    ${suspicious_features.map(feature => 
+                                        `<li class="list-group-item">${feature}</li>`
+                                    ).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    // 添加图像信息部分
+                    if (analysis.image_info) {
+                        const info = analysis.image_info;
+                        resultHtml += `
+                            <div class="result-section">
+                                <h5><i class="fas fa-info-circle"></i> 图像信息</h5>
+                                <div class="feature-stat">
+                                    <div class="row">
+                                        <div class="col-6">分辨率:</div>
+                                        <div class="col-6 text-end">${info.width} x ${info.height}</div>
+                                    </div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="row">
+                                        <div class="col-6">格式:</div>
+                                        <div class="col-6 text-end">${info.format}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // 显示结果
+                    result.innerHTML = resultHtml;
+                    
+                    // 滚动到结果
+                    setTimeout(() => {
+                        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                })
+                .catch(error => {
+                    console.error('处理失败:', error);
+                    
+                    // 处理错误
+                    let errorMsg = '检测过程中发生错误';
+                    let errorDetail = error.message || '未知错误';
+                    
+                    // 添加调试信息
+                    console.log('详细错误信息:', error.stack || '无堆栈信息');
+                    
+                    const errorHtml = `
+                        <div class="alert alert-danger">
+                            <h5><i class="fas fa-exclamation-triangle"></i> ${errorMsg}</h5>
+                            <p>${errorDetail}</p>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-outline-primary btn-sm" onclick="location.reload()">
+                                    <i class="fas fa-sync-alt"></i> 刷新页面
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" id="retryButton">
+                                    <i class="fas fa-redo"></i> 重试
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    result.innerHTML = errorHtml;
+                    
+                    // 添加重试按钮事件
+                    setTimeout(() => {
+                        const retryButton = document.getElementById('retryButton');
+                        if (retryButton) {
+                            retryButton.addEventListener('click', function() {
+                                uploadImage(file);
+                            });
+                        }
+                    }, 100);
+                })
+                .finally(() => {
+                    // 隐藏加载状态
+                    uploadStatus.style.display = 'none';
+                });
+            }
+            
+            // 检查服务器状态函数 - 使用简化版本
+            async function checkServerStatus(baseUrl) {
+                return true; // 简化处理，默认服务器可用
+            }
+            
+            // 调试面板功能
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'd') {
+                    e.preventDefault();
+                    const debugPanel = document.getElementById('debugPanel');
+                    if (debugPanel) {
+                        debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
+                    }
+                }
+            });
+            
+            // 覆盖控制台日志输出到调试面板
+            const oldLog = console.log;
+            console.log = function() {
+                oldLog.apply(console, arguments);
+                
+                const debugLog = document.getElementById('debugLog');
+                if (debugLog) {
+                    const msg = Array.from(arguments).join(' ');
+                    const logLine = document.createElement('div');
+                    logLine.textContent = new Date().toLocaleTimeString() + ': ' + msg;
+                    debugLog.appendChild(logLine);
+                    debugLog.scrollTop = debugLog.scrollHeight;
+                }
+            };
+        });
+    </script>
+</body>
+</html> 

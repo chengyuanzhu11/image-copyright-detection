@@ -1,0 +1,1480 @@
+
+
+  
+
+ :  
+       
+       21224232
+        
+        
+
+    2025  5 
+          
+
+I()
+                                 
+
+II()()
+1. 6
+2. HTML/CSS/JavaScript  Vue 
+ 8
+3. Python Flask  API 
+ 1
+4. ResNet50  Logo  AI 
+ 3
+5.
+ 5
+6. AI 
+ 2
+7.
+ 4
+8.
+ 7
+III()
+1 1  4 
+2 5  8 
+3 9  12 
+34 1931216
+ 5-7 
+[1]2018
+[2]TensorFlow  Keras 2021 
+[3]2020 
+[4]2020 
+[5] Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012). ImageNet
+CDleaespsifCicoantivoonluwtioitnhal Neural Networks. Advances in Neural Information Processing
+[6] College of Computer and Information Sciences, King Saud University,
+Riyadh 11543, Saudi Arabia. Trademark Image Similarity Detection Using
+CCoonnvvoolluuttiioonnaall Neural Network.
+
+                               212242  
+
+
+
+  2025  01  06  2025  06  01 
+
+
+()
+
+   
+
+:
+                          
+
+      
+,
+
+
+
+  
+
+  
+
+                          
+
+      
+
+
+
+
+  
+
+
+
+
+     212242
+
+
+ Logo
+
+
+
+ Logo 
+
+
+       ResNet50 
+
+ Logo  Logo "
+" Logo 
+
+       Logo 
+
+
+
+
+       Logo  Logo 
+
+
+
+Logo ResNet50
+
+  
+
+  I
+      Machine Learning­Based Image Copyright Detection System
+
+                           Student Name: ChengYuan ZhuClass: 212242
+                           Supervisor: XiaoXing Wan
+
+Abstract: At present, with the rapid development of Internet technology, image data across digital
+
+platforms has shown an explosive growth trend. Brand logos are a crucial part of a company's visual
+image and also a key component of its intellectual property rights. Nowadays, they can often be
+seen in digital content, which has made trademark infringement increasingly common. The
+traditional methods relying on manual verification and expert appraisal have encountered
+challenges in terms of efficiency and objectivity when dealing with large-scale image analysis and
+complex label changes, and are unable to meet the requirements of modern copyright protection. To
+solve this problem, a machine learning-driven image copyright detection system, This system
+mainly focuses on brand identity recognition and similarity analysis, and relies on computational
+models to improve the accuracy of detection and the degree of automation.
+
+      The system uses ResNet50 as the core feature extraction network. By normalizing the feature
+vectors, the stability and reliability of similarity calculation are guaranteed. During the process of
+similarity evaluation, cosine similarity measurement can accurately quantify the visual matching
+situation between the query image and the database entries. To solve the problem of multi-variant
+logo recognition, a "brand maximization matching" strategy is adopted. This strategy can
+effectively identify different logo styles under the same brand.
+
+      In addition to the basic functions such as image upload and comparison, this system also
+integrates the logo feature database management and the visualization result display module
+together. This enhances the flexibility during operation. When conducting visualization processing,
+the difference magnification strategy combines nonlinear transformation and comparison similarity
+graphs for use. This approach highlights the subtle differences existing between highly similar
+matches, which is to provide support for decision-making.
+
+      After evaluating the public identification dataset in this paper, it is found that this system
+performs well in terms of recognition accuracy, processing speed, and user experience. This
+solution is both technologically innovative and practical, providing an efficient and scalable
+intelligent tool for trademark protection.
+
+Keywords: Image Copyright Detection; Logo Recognition; Machine Learning; ResNet50
+
+                                                               Supervisor's Signature:
+
+                                                                                II
+  .................................................... 1
+
+  1.1  .......................................................... 1
+        1.1.1  ........................................... 1
+        1.1.2  ................................................. 3
+        1.1.3  ......................................................... 3
+        1.1.4 AI  .................................... 3
+
+  1.2  .......................................................... 4
+        1.2.1  ....................................................... 4
+        1.2.2  ....................................................... 4
+        1.2.3  ..................................................... 5
+        1.2.4  ..................................................... 5
+
+  1.3  ............................................................ 6
+        1.3.1 Logo  ..............................................6
+        1.3.2 Logo  ............................................6
+        1.3.3  Logo  ................................................6
+        1.3.4  ................................................. 7
+        1.3.5  ............................................. 7
+        1.3.6 AI  .................................................... 7
+
+  .......................................... 9
+
+  2.1  ................................................................ 9
+  2.2  .............................................................. 9
+
+        2.2.1  ......................................................... 9
+        2.2.2  ......................................................... 9
+        2.2.3  ......................................................... 9
+        2.2.4  ............................................ 10
+  2.3  ........................................................... 10
+  2.4  ........................................................... 11
+  2.5  ........................................................... 11
+        2.5.1 ResNet50  ....................................... 11
+        2.5.2  ................................................ 12
+        2.5.3  .................................................. 13
+  2.6  ............................................................... 15
+        2.6.1 Logo  ....................................... 15
+        2.6.2 AI  ..................................... 16
+
+  2.7  ............................................................... 16
+
+  ............................................... 18
+
+  3.1  ............................................................ 18
+  3.2  ............................................................ 18
+
+        3.2.1  ...................................................... 19
+        3.2.2 Logo  ..................................................... 20
+        3.2.3 AI  ................................................... 25
+        3.2.4 Logo  ..................................................... 27
+        3.2.5  ...................................................... 29
+
+  ................................. 31
+
+  4.1  ..................................................... 31
+        4.1.1  .......................................................... 31
+        4.1.2  .......................................................... 31
+
+  4.2  Logo  .................................................... 32
+        4.2.1  .......................................................... 32
+        4.2.2  .......................................................... 33
+
+  4.3  ................................................... 34
+        4.3.1  .......................................................... 34
+        4.3.2  .......................................................... 34
+
+  ......................................... 37
+
+  5.1  ............................................................... 37
+  5.2  ............................................................... 37
+  5.3  ........................................................... 38
+
+  ............................................. 39
+ ...................................................... 41
+ .......................................................... 43
+                                           
+
+                                   
+1.1 
+
+      
+ Logo 
+
+ Logo 
+
+
+
+
+      [3]
+
+
+
+
+
+
+1.1.1 
+      
+
+
+
+
+      1 2012 
+Galaxy  iPhone  iPad 
+
+
+
+
+
+
+
+
+
+      2 Logo 
+
+                                                                      1
+                                           
+
+ LV 
+ Logo 
+
+ LV
+Logo 
+
+
+
+      3     2019                Air Max 270 
+VaporMax 
+ 3D 
+
+ 3D
+
+
+
+
+      4 Forever 21  2017  Forever
+21 ""Logo 
+""Logo 
+
+"
+"Logo 
+
+
+
+      5 Logo  Logo
+
+ Logo 
+
+
+ Logo [17]
+ Logo
+
+
+                                                                      2
+                                           
+
+1.1.2 
+      
+
+
+
+
+ Logo 
+
+
+ ResNet[4] Logo
+
+
+ Logo 
+
+
+
+1.1.3 
+      
+
+ Logo
+
+
+
+
+
+
+
+
+
+1.1.4 AI 
+      
+
+
+ AI  Logo[13]
+
+
+                                                                      3
+                                           
+
+ AI 
+ AI 
+
+ AI 
+
+ AI 
+
+
+
+1.2 
+
+1.2.1 
+
+      Logo 
+ CNN Logo 
+Hou 
+
+ [25] 2015  Logo 
+ Logo 
+[10] ResNet -
+50 
+ Showkatramani  ResNet - v2 
+ [26] Siamese Network 
+
+
+ ResNetVGG
+
+
+1.2.2 
+
+      
+
+
+ MobileNetV2 
+
+
+                                                                      4
+                                           
+
+
+
+
+ Logo
+
+[7]
+ Triton Inference Server 
+ Milvus 
+
+
+
+
+1.2.3 
+      
+
+ ResNetResNet-v2
+
+
+ 
+
+
+
+
+
+
+
+
+1.2.4 
+      
+
+ Logo 
+
+
+
+
+                                                                      5
+                                           
+
+
+
+
+
+ ResNet50 
+
+
+
+1.3 
+
+      
+
+
+1.3.1 Logo 
+       Logo 
+
+ ResNet50 
+ Logo 
+
+ L2 
+
+
+
+1.3.2 Logo 
+       Logo 
+
+"" Logo 
+
+ Logo 
+
+
+
+1.3.3  Logo 
+       Logo 
+
+
+--Logo 
+
+                                                                      6
+                                           
+
+ Logo 
+
+ Logo 
+
+1.3.4 
+
+      
+
+
+ Y 
+
+ Logo 
+ Chart.js 
+ PNG 
+
+1.3.5 
+
+      
+      1)  HTML5CSS3  JavaScript 
+ Logo 
+      2) Python Flask[6]
+ RESTful API 
+      3)Logo  JSON 
+Pickle 
+       Logo 
+
+
+1.3.6 AI 
+
+      AI  Logo 
+
+
+ AI 
+
+ AI 
+
+
+                                                                      7
+                                           
+
+ AI 
+
+
+
+
+AI  AI 
+ AI 
+
+
+
+      
+
+ Logo  AI 
+
+                                                                      8
+                                           
+
+                           
+2.1 
+
+       Logo 
+
+ AI 
+
+ Logo  AI 
+
+ Logo 
+
+2.2 
+
+2.2.1 
+      
+
+ResNet50 [9]
+ Python Flask 
+[11]
+ HTML5CSS3  JavaScript
+
+
+
+
+2.2.2 
+      
+
+
+
+
+
+
+
+
+2.2.3 
+      
+
+                                                                      9
+                                           
+
+
+""
+ Logo  AI 
+
+ Logo 
+
+
+2.2.4 
+      
+
+
+
+
+
+
+2.3 
+
+      
+
+ HTTP 
+ Flask 
+AI 
+
+ TensorFlow 
+ Logo 
+
+
+ localStorage 
+Logo 
+
+
+
+
+
+                                                                      10
+                                           
+
+                                                  2-1 
+
+2.4 
+
+      AI Logo 
+
+
+      
+ResNet50 [14]
+Logo 
+
+
+
+      AI  OpenCV 
+ AI 
+
+      Logo  Logo 
+ Logo 
+
+
+      
+
+
+
+      
+
+
+2.5 
+
+2.5.1 ResNet50 
+
+                                                                      11
+                                           
+
+      ResNet50  50 
+ Residual Block
+ x  F(x) H(x)
+= F(x) + x""
+
+
+""
+
+ResNet50 
+
+
+      ResNet50  3 
+ 1×1  3×3 
+ 1×1 ""
+ 3×3 
+ResNet50  2500 
+ResNet50 
+
+ 3463 
+ 7×7
+2048 
+2048 
+
+
+      ResNet50 
+ ResNet50 
+ Logo  2048 
+ Logo  ResNet50
+
+ResNet50 
+
+
+2.5.2 
+
+      
+
+                                                                      12
+        
+
+
+
+
+
+
+
+                                                               1.1
+          ,  =                     
+
+    |A||B|  
+
+[-1, 1] 1
+
+-1 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 1 
+
+ 0 
+
+ Logo  Logo 
+
+ 0.9
+
+ 0.1
+
+
+
+
+
+
+
+
+
+
+
+2.5.3 
+
+       Logo
+""
+ Logo 
+ Logo
+
+" Logo"
+
+        13
+                                           
+
+
+""
+ A
+ Logo  A  2
+ 2  0.95 1 
+ 0.50 0.95  A 
+ logo 
+ A 
+
+      
+
+
+ Logo""
+
+ A  0.95 
+ A  Logo
+ Logo 
+
+
+      ""
+Logo 
+ Logo
+ Logo  Logo 
+
+Logo 
+ Logo 
+
+"" Logo 
+
+
+
+                                                                      14
+      
+
+       2-2 
+
+2.6 
+
+      
+
+ AI 
+ Logo  AI
+
+
+2.6.1 Logo 
+
+      Logo 
+ Logo 
+ Logo 
+
+             15
+                                           
+
+
+ Logo  2-3 
+ Logo 
+ Logo 
+ Logo 
+
+                                     2-3 Logo 
+
+2.6.2 AI 
+      AI 
+
+ AI 
+
+ AI 
+
+
+       2-3  AI 
+
+
+
+
+                                      2-4 AI 
+
+2.7 
+
+      
+
+
+                                                                      16
+                                           
+
+      Flask Python  Web 
+[16]
+
+      TensorFlow ResNet50
+
+
+      ResNet50 Logo 
+
+
+      localStoragePickleJSON Logo
+
+
+      HTML5, CSS, JavaScript
+
+
+      OpenCV
+      JSON / PickleJSON Pickle
+
+
+                                                                      17
+                  
+
+                       
+
+      
+
+
+
+Logo AI
+
+
+
+
+3.1 
+
+ 3-1 
+
+                 3-1 
+
+                                 
+
+        Python                Python 
+                                             
+
+            Flask             Flask  Web 
+        TensorFlow                           API 
+
+                              TensorFlow 
+                                      GPU 
+
+        ResNet50             50 
+                             ImageNet  Logo 
+
+                                                      
+
+        localStorage         
+                                     Logo 
+
+        HTML/CSS/JavaScript   HTMLCSS  JavaScript 
+
+                                 
+
+           OpenCV             OpenCV 
+        JSONPickle                 
+
+                             JSON Pickle 
+                              
+
+3.2 
+
+      Logo AI Logo 
+
+
+                             18
+                                           
+
+3.2.1 
+      
+
+ localStorage 
+
+ 3-1 
+
+                                           3-1 
+
+      
+
+                                             3-2 
+
+                                                                      19
+                                           
+
+                                             3-3 
+
+3.2.2 Logo 
+      
+
+ ResNet50 
+ Logo  Logo 
+ 3-4 
+
+                                            3-4 Logo 
+
+      
+ JavaScript  Logo 
+ 3-5 
+
+                                                                      20
+                                           
+
+                                            3-5 Logo 
+
+      Logo 
+ Logo  Logo 
+ 3-63-73-8 
+
+
+                                               3-6  1
+
+       3-6 ""
+ Logo ""
+ 95-100%90-95%)
+
+                                                                      21
+                                           
+
+                                               3-7  2
+
+      "" 3-7  Logo 
+
+"
+" 3-7  10  Logo 
+
+
+
+                                               3-8  3
+
+      "" 3-8
+
+
+       Logo
+
+ Logo  Logo 
+
+
+      Logo  Logo 
+ 3-93-103-11
+
+                                                                      22
+
+
+ 3-9  Logo 
+
+                   23
+      
+              3-10 
+
+ 3-11  Logo 
+
+                           24
+                                           
+
+                                               3-12  Logo
+
+       Logo 
+
+ Logo  Logo
+
+
+ JSON 
+3.2.3 AI 
+
+      AI  AI  GAN[5]
+
+
+
+ AI 
+"AI """
+ 3-13 
+
+                                                                      25
+                                           
+
+                                             3-13 AI 
+
+      
+"" AI  3-
+14  AI  70.00%
+
+                                             3-14 AI 
+
+                                                                      26
+                                           
+
+       3-15 
+
+                                          3-15 AI 
+
+       AI 
+ AI 
+
+
+3.2.4 Logo 
+
+       Logo  Logo 
+ Logo json 
+Logo  Logo 
+ Logo 
+ Logo  3-16 
+
+                                                                      27
+                                    
+
+                                   3-16  Logo 
+
+ 3-17  3-18
+
+                               3-17  Logo  1
+
+                                                             28
+                                           
+
+                                      3-18  Logo  2
+
+       Logo  Logo 
+ Logo  Logo 
+ Logo 
+
+ Logo 
+
+3.2.5 
+
+      
+
+ 3-19 
+
+                                               3-19 
+
+                                                                      29
+                                           
+
+      
+
+
+
+
+                                                                      30
+                                           
+
+                     
+4.1 
+
+4.1.1 
+      
+
+ Logo 69%
+
+
+      
+
+
+4.1.2 
+
+      
+      1)  L2  4-
+1 
+
+                                             4-1 
+
+      2)  4-2 
+
+                                           4-2 
+
+                                                                      31
+                                           
+
+      3) 
+ 4-3 
+
+                                           4-3 
+
+      
+
+
+4.2  Logo 
+
+4.2.1 
+       Logo 
+
+ Logo 
+ Logo 
+
+
+      
+ Logo 
+
+                                                                      32
+                                           
+
+4.2.2 
+       Logo 
+      1)  Logo  4-4
+
+
+
+                                             4-4 
+
+        logo 
+                                          BRAND_LOGOS = {}
+
+      2)  Logo  4-5 
+
+                                           4-5 
+
+      3)  Logo  4-
+6 
+
+                                        4-6 
+
+      4)  Logo  Logo  4-7 
+
+                                                                      33
+                                           
+
+           =
+                                            4-7  Logo 
+
+       Logo 
+
+
+4.3 
+
+4.3.1 
+      
+
+ 80% 95%
+
+
+
+       Logo  Logo 
+ Logo  70%
+
+4.3.2 
+
+      
+      1) 
+ 4-8 
+
+                                                                      34
+                                           
+
+                                              4-8 
+
+      2)  Y 
+ 4-9 
+
+                                              4-9 
+
+      3) 
+4-10 
+
+                                               4-10 
+
+                                                                      35
+                                           
+
+      4) 
+ 4-11 
+
+                                            4-11 
+
+      
+
+
+                                                                      36
+               
+
+              
+
+5.1 
+
+     5-1  5-
+
+2             5-1 Logo 
+
+                           
+
+Logo                       
+          Logo   Logo    
+                 
+
+ Logo                      
+
+           Logo          
+
+                           
+
+                         
+
+                           
+                 
+
+                           
+                 
+
+              5-2 AI 
+
+                                    
+
+
+TC-AI-  AI   GAN   "AI   "AI "AI  
+                   "AI   = 41.32%
+01                  > 
+                   30%
+
+TC-AI-             "     ""AI       
+                   "AI    = 17.92%
+02                 < 
+
+TC-AI-        AI    AI              
+03                       
+                   
+
+TC-AI-   30%       AI               
+                         ""
+04            50%  
+
+5.2 
+
+      Logo 
+AI 
+
+                                                                      37
+                
+
+ 5-3  5-4 
+
+              5-3 Logo 
+
+                                    
+
+                     224×224         0.3 /
+                                     0.05 /
+             2048  100
+                            Logo
+
+             Logo-2K+  50            Logo96%
+                                           Logo87%
+
+                                     1.2 
+
+              5-4 AI 
+
+                                     CPU     
+                                     
+                          MB                 
+                                       27%   
+          100       0.56     173       44%   
+         10       0.68       190       41%   
+          500              198       
+        10          0.58    
+                 200ms
+
+5.3 
+
+ 10  5-5 
+
+                 5-5 
+
+        1­5               
+           
+
+        4.5     
+
+        4.2     
+
+        4.0      Logo  Logo 
+
+                                  
+
+        4.7     
+      
+                                  
+
+        4.3     
+
+
+
+      
+
+
+
+                38
+                                           
+
+                               
+
+       Logo 
+ AI 
+
+ Logo  AI 
+
+ AI 
+
+
+      Logo 
+AI Logo 
+
+ Logo 
+ Logo 
+AI 
+
+
+       Python  Flask 
+ TensorFlow  ResNet50 
+ HTML5  JavaScript 
+ JSON  Pickle 
+
+
+
+       0.3
+ 0.05  /  Logo  96%
+ 1.2  10 
+ CPU 
+
+
+
+AI 
+
+Logo 
+
+                                                                      39
+                                           
+
+
+
+
+      
+EfficientNetVision Transformer [12]
+
+ FAISS  Milvus 
+
+WebSocket 
+
+      
+ Logo  AI 
+
+
+
+
+                                                                      40
+                                           
+
+                                    
+
+[1] , .  MobileNetV2  Logo [J]. , 2020,
+      40(2):456­463.
+
+[2] . Logo [J].202243(5):123-130.
+[3] , , . : [J]. 
+
+      , 2024, 47(9): 1606-1621.
+[4] , .  ResNet50 [J]. , 2023,
+
+      12(2): 303-308.
+[5] , . GAN [J]. , 2023, 59(18):
+
+      45-52.
+[6] , .  Flask  SQLAlchemy [J]. 
+
+      , 2019, 29(5): 125-129.
+[7] , . [J]. , 2022, 43(7):
+
+      1901-1907.
+[8] , .  GAN [J]. , 2021, 48(6):
+
+      112-118.
+[9] , .  ResNet50 [J]. , 2020,
+
+      46(9): 89-92.
+[10], . [J]. , 2021,
+
+      38(10): 2950-2954.
+[11], .  Flask  Web [J]. , 2020, 19(5): 45-48.
+[12], . [J]. , 2022, 58(2):
+
+      123-128.
+[13], .  GAN [J]. , 2021,
+
+      15(4): 789-795.
+[14], .  ResNet50 [J]. , 2020, 46(12):
+
+      95-98.
+[15], . [J]. , 2021,
+
+      42(3): 765-770.
+[16], .  Flask  Web [J]. , 2019, 18(6):
+
+      50-53.
+
+                                                                      41
+                                           
+
+[17], . [J]. , 2022, 39(1):
+      210-215.
+
+[18], .  GAN [J]. , 2020, 47(8):
+      105-110.
+
+[19], .  ResNet50 [J]. , 2021,
+      47(7): 90-93.
+
+[20], . [J]. , 2020,
+      56(14): 130-135.
+
+[21], .  Flask  Web [J]. , 2021, 20(3): 55-
+      58.
+
+[22], . [J]. , 2022,
+      43(9): 2450-2455.
+
+[23] He, K., Zhang, X., Ren, S., & Sun, J. Deep Residual Learning for Image
+      Recognition[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern
+      Recognition (CVPR), 2016: 770-778.
+
+[24] Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville,
+      A., & Bengio, Y. Generative Adversarial Nets[C]//Advances in Neural Information Processing
+      Systems (NeurIPS), 2014, 27: 2672-2680.
+
+[25] Hou X, Wang Y, Liu J. A Survey on Deep Learning for Logo Detection and Recognition[J].
+      Journal of Visual Communication and Image Representation, 2021, 78: 103­116.
+
+[26] Showkatramani A, Ganorkar A S. Trademark Image Similarity Detection Using
+      ResNet- v2[C]//Proceedings of the IEEE International Conference on Image Processing
+      Workshops (ICIPW). 2020: 936­950.
+
+                                                                      42
+                                           
+
+                                       
+
+      
+
+
+
+
+
+
+      
+
+Logo  AI 
+
+
+
+      
+
+
+
+
+      
+
+                                                                      43
+
