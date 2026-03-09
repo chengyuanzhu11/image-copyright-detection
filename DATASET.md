@@ -110,12 +110,3 @@ python backend/import_logos.py data/Logo-2K+
 ```
 
 3. 用新生成的 `logo_data.json` 和 `logo_features.pkl` 覆盖旧的本地文件。
-
-## 如果你以后还要继续托管
-
-推荐保持下面这个拆分：
-
-- GitHub 仓库：源码、页面、说明文档、论文、少量样例资源
-- 本地或对象存储：完整数据集、模型权重、特征库、数据库、日志
-
-如果之后需要公开分享完整数据，建议单独使用网盘、对象存储、GitHub Releases 或 DVC，而不是直接进 Git 仓库。
