@@ -1,44 +1,118 @@
-# 基于机器学习的图像版权检测系统 (Image Copyright Detection System)
+# 图像版权检测系统
 
-## 项目简介
+基于 `Flask + TensorFlow/ResNet50` 的毕业设计项目，面向 Logo 版权检测与 AI 生成图像初步识别场景。项目包含后端 API、前端页面、Logo 数据导入脚本、模型训练脚本，以及论文文档。
 
-本项目是一个旨在应对数字化时代商标侵权与 AI 生成图像泛滥问题的自动化检测系统。系统以品牌 Logo 识别与相似度分析为核心，结合前端可视化与后端深度学习模型，提供了一套高精度、可扩展的知识产权保护解决方案。该系统有效克服了传统人工比对效率低、主观性强的缺陷，并创新性地集成了 AI 生成图片前置甄别功能。
+## 仓库说明
 
-## 核心功能模块
+当前 GitHub 仓库托管的是“轻量代码版”项目：
 
-* **Logo 版权相似度检测**：支持用户上传图像，系统自动提取特征并与数据库中的注册商标进行特征比对，输出匹配排名与相似度评分。
-* **AI 生成图片前置检测**：通过分析图像的底层统计特征（噪声分布、纹理、边缘、色彩），计算图像由 AI 生成的概率，为潜在的新型侵权手段提供防范预警。
-* **多维度结果可视化**：提供相似度区间分布饼图、相似度排名水平条形图，以及创新性的“差异放大折线图”和“相对差异对比表”，精准凸显高分段（如 90%-95%）匹配项之间的细微差距。
-* **特征库动态管理**：支持单张或批量导入 Logo 样本，系统自动完成特征提取与持久化存储，并提供一键重置与更新功能以保障长期稳定性。
+- 包含源码、前端页面、轻量元数据和论文文档。
+- 不包含大体积数据集、训练产物、运行缓存、日志和本地虚拟环境。
 
-## 核心算法与技术创新
+大文件和数据恢复方式见 [DATASET.md](DATASET.md)。
 
-* **特征提取与标准化**：选用预训练的 50 层深度卷积神经网络 ResNet50 作为核心特征提取器，输出 2048 维特征向量。并在提取流程中强制引入 L2 范数归一化处理，消除因光照或尺度差异带来的幅值误差。
-* **相似度度量**：基于标准化特征向量，采用余弦相似度算法量化图像间的视觉匹配度。核心计算公式为：
+## 主要功能
 
-$$S_{im}cos(A,B)=\frac{A \cdot B}{\Vert A \Vert \cdot \Vert B \Vert}$$
+- 上传图片并进行 Logo 相似度检测。
+- 返回相似品牌、类别和详细检测结果。
+- 对图片进行 AI 生成概率初步分析。
+- 导入 `Logo-2K+` 数据集并生成特征库。
+- 训练基于 `ResNet50` 的 Logo 分类模型。
+- 管理 Logo 元数据、类别和特征重建。
 
+## 技术栈
 
-* **品牌最大匹配策略 (Brand Maximum Match)**：为解决同一品牌下存在多套 Logo 变体（因时期、颜色、形状不同）的识别难题，构建了“品牌-多 Logo”映射数据结构。系统计算输入图像与某品牌所有参考模板的相似度后，取最大值作为该品牌的最终得分，兼顾了识别的全面性与准确性。
+- 后端：Python、Flask、Flask-CORS、Flask-RESTX、SQLAlchemy
+- 深度学习与图像处理：TensorFlow 2.8、ResNet50、NumPy、Pillow、OpenCV、scikit-learn
+- 前端：HTML、CSS、JavaScript
+- 数据存储：JSON、Pickle、SQLite
 
-## 技术栈选型
+## 目录结构
 
-* **后端开发**：Python, Flask (提供 RESTful API 路由分发与业务逻辑处理)。
-* **深度学习/算法**：TensorFlow (模型加载与推理), OpenCV (图像预处理与统计特征分析)。
-* **前端交互**：HTML5, CSS3, JavaScript, Chart.js (实现响应式界面与图表渲染)。
-* **数据存储**：JSON (配置与基础信息), Pickle (特征向量序列化), localStorage (轻量级用户状态管理)。
+```text
+backend/                         Flask API、模型脚本、数据导入与训练脚本
+frontend/                        前端页面与静态资源
+data/                            本地数据集目录（已忽略，不上传）
+models/                          本地模型产物目录（已忽略，不上传）
+logo_data.json                   Logo 元数据
+paper_text.txt                   论文文本提取结果
+基于机器学习的图像版权检测系统.pdf  论文文档
+```
 
-## 系统架构
+## 快速开始
 
-系统采用标准的前后端分离三层架构：
+建议始终在项目根目录执行命令，避免模型、日志和特征文件写入不同位置。
 
-* **表示层**：负责用户交互与可视化结果展示，不包含复杂业务逻辑。
-* **业务逻辑层**：处理前端 HTTP 请求，调用 TensorFlow 进行特征提取，执行余弦相似度比对与阈值筛选。
-* **数据访问层**：管理 SQLite/localStorage 中的结构化关系数据，以及本地文件系统中的非结构化数据（模型权重、Pickle 特征文件、图像原文件）。
+1. 创建并激活虚拟环境
 
-## 性能指标 (基于 Logo-2K+ 数据集测试)
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
 
-* 单张图像特征提取平均耗时：0.3 秒。
-* 相似度计算速度：0.05 秒/次 (2048 维特征比对)。
-* 原始 Logo 识别准确率：96%。
-* 并发处理能力：支持稳定 10 并发图像上传与推理分析。
+2. 安装依赖
+
+```powershell
+pip install -r backend/requirements.txt
+pip install -r requirements.txt
+pip install matplotlib tqdm
+```
+
+说明：
+
+- 当前仓库依赖文件仍是分散状态，所以上面用了组合安装。
+- 首次运行 TensorFlow/ResNet50 时，可能会下载预训练权重。
+
+3. 启动完整应用
+
+```powershell
+python backend/simple_app.py
+```
+
+默认访问地址：
+
+```text
+http://localhost:5000/
+```
+
+如果你只想运行较精简的接口版本，可以尝试：
+
+```powershell
+python backend/app.py
+```
+
+## 主要接口
+
+`backend/simple_app.py` 中包含的主要路由如下：
+
+- `POST /detect`：Logo 相似度检测
+- `GET /detailed_result`：查看详细检测结果
+- `POST /detect_ai_generated`：AI 生成图片检测
+- `POST /add_logo`：新增 Logo
+- `GET /logos`：获取 Logo 列表
+- `GET /categories`：获取类别列表
+- `POST /train_model`：启动模型训练
+- `GET /model_status`：查询模型训练状态
+- `POST /import_dataset`：导入数据集
+- `POST /reset_features`：重建特征库
+
+## 数据与模型说明
+
+仓库中没有包含以下本地大文件内容：
+
+- `data/`
+- `models/`
+- `backend/models/`
+- `logo_features.pkl`
+- `*.pkl.bak`
+- `*.db`
+- `*.log`
+- `temp_uploads/`
+
+另外，当前仓库中的 `logo_data.json` 是已有元数据文件，但其中的 `image_path` 字段可能来自旧机器的本地路径。迁移到新环境后，建议按 [DATASET.md](DATASET.md) 的步骤重新生成一份，保证路径和你当前机器一致。
+
+## 相关文档
+
+- [DATASET.md](DATASET.md)
+- [backend/README.md](backend/README.md)
+- [基于机器学习的图像版权检测系统.pdf](基于机器学习的图像版权检测系统.pdf)
